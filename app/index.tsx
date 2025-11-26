@@ -11,10 +11,7 @@ export default function HomeScreen() {
     <View className="flex-1 bg-black px-4 pt-4">
       <Text className="text-white text-3xl font-bold mb-4">Mis tareas</Text>
 
-      <Link
-        href="/new"
-        className="text-blue-400 underline mb-4 text-lg"
-      >
+      <Link href="/new" className="text-blue-400 underline mb-4 text-lg">
         + Nueva tarea
       </Link>
 

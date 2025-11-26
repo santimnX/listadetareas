@@ -18,9 +18,15 @@ export const TasksContext = createContext<TasksContextProps>({
 export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  const addTask = (task: Task) => {
-    setTasks((prev) => [...prev, task]);
+  const addTask = (task: Omit<Task, "id">) => {
+    const newTask: Task = {
+      ...task,
+      id: Date.now().toString(),
+    };
+  
+    setTasks(prev => [...prev, newTask]);
   };
+  
 
   const updateTask = (task: Task) => {
     setTasks((prev) =>
