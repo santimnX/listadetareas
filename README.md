@@ -1,69 +1,53 @@
-🧱 Arquitectura del Proyecto
+> Edited for use in IDX on 07/09/12
 
-El proyecto está organizado en carpetas profesionales:
+# Welcome to your Expo app 👋
 
-components/ → Componentes visuales sin lógica (UI pura).
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-context/ → Lógica global de tareas (TaskContext).
+## Get started
 
-hooks/ → Hook personalizado useTasks() para acceder al context.
+#### Android
 
-libs/ → Funciones para conectar con la API (GET, POST, PUT, DELETE).
+Android previews are defined as a `workspace.onStart` hook and started as a vscode task when the workspace is opened/started.
 
-types/ → Interfaces TypeScript, como la interfaz Task.
+Note, if you can't find the task, either:
+- Rebuild the environment (using command palette: `IDX: Rebuild Environment`), or
+- Run `npm run android -- --tunnel` command manually run android and see the output in your terminal. The device should pick up this new command and switch to start displaying the output from it.
 
-pages/ → Páginas principales (lista, crear, editar).
+In the output of this command/task, you'll find options to open the app in a
 
-🗄️ Backend: JSON Server
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-Se usa un archivo db.json con datos como:
+You'll also find options to open the app's developer menu, reload the app, and more.
 
-{
-  "task": [
-    { "id": 1, "title": "a title", "description": "a description" }
-  ]
-}
+#### Web
 
+Web previews will be started and managred automatically. Use the toolbar to manually refresh.
 
-Permite hacer:
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-GET (listar)
+## Get a fresh project
 
-POST (crear)
+When you're ready, run:
 
-PUT (editar)
+```bash
+npm run reset-project
+```
 
-DELETE (eliminar)
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-🧩 Principales Funciones
+## Learn more
 
-✔ Listar tareas
-✔ Crear nuevas tareas
-✔ Editar tareas existentes
-✔ Eliminar tareas
-✔ Estado global con Context API
-✔ Rutas con React Router (/, /new, /edit/:id)
+To learn more about developing your project with Expo, look at the following resources:
 
-🔄 Cómo funciona internamente
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-El usuario interactúa con un componente (form, botón, etc.).
+## Join the community
 
-El componente llama a una función del TaskContext.
+Join our community of developers creating universal apps.
 
-El context usa funciones de libs/api para comunicarse con JSON Server.
-
-Se actualiza el estado global (tasks).
-
-Toda la UI se actualiza automáticamente.
-
-🚀 Qué presenta el proyecto
-
-Arquitectura limpia (UI, lógica y API separadas).
-
-Componentes reutilizables.
-
-TypeScript estrictamente tipado.
-
-Backend fake para pruebas.
-
-Proyecto profesional y escalable.
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
