@@ -1,16 +1,36 @@
 {
-    "posts": [
-      { "id": "1", "title": "a title", "views": 100 },
-      { "id": "2", "title": "another title", "views": 200 }
-    ],
-    "comments": [
-      { "id": "1", "text": "a comment about post 1", "postId": "1" },
-      { "id": "2", "text": "another comment about post 1", "postId": "1" }
-    ],
-    "profile": {
-      "name": "typicode"
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Organizar archivos del proyecto",
+      "description": "Revisar y ordenar todos los documentos",
+      "category": "Trabajo",
+      "completed": false,
+      "createdAt": "2025-01-15T10:00:00.000Z"
     },
-    "task":[
-    {"id": 1, "title":"a title","description":"a description"}
-    ]
-  }
+    {
+      "id": "2",
+      "title": "Hacer compra semanal",
+      "description": "Comprar frutas y verduras",
+      "category": "Personal",
+      "completed": false,
+      "createdAt": "2025-01-15T11:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "title": "Llamar a Juan para revisar",
+      "description": "Revisar el proyecto pendiente",
+      "category": "Personal",
+      "completed": true,
+      "createdAt": "2025-01-14T09:00:00.000Z"
+    },
+    {
+      "id": "4",
+      "title": "Escribir propuesta",
+      "description": "Redactar propuesta para el cliente",
+      "category": "Prioridad Alta",
+      "completed": false,
+      "createdAt": "2025-01-16T08:00:00.000Z"
+    }
+  ]
+}

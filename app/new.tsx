@@ -1,52 +1,53 @@
-// app/new.tsx
-import { useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { router } from "expo-router";
-import { useTasks } from "../hooks/useTasks";
+import React, { useState } from 'react';
+import { View, Alert } from 'react-native';
+import { router } from 'expo-router';
+import { useTasks } from '../lib/TaskContext';
+import { TaskForm } from '../components/TaskForm';
+import { taskSchema } from '../lib/validation';
 
 export default function NewTaskScreen() {
-  const { addTask } = useTasks();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const { createTask } = useTasks();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState<'Trabajo' | 'Personal' | 'Prioridad Alta'>('Trabajo');
+  const [errors, setErrors] = useState<{ title?: string; description?: string }>({});
 
-  const handleSubmit = () => {
-    if (!title.trim()) return;
+  const handleSubmit = async () => {
+    try {
+      // Validar con Zod
+      taskSchema.parse({ title, description, category });
+      setErrors({});
 
-    addTask({ title, description });
-    router.push("/");
+      // Crear tarea
+      await createTask({ title, description, category });
+      Alert.alert('Éxito', 'Tarea creada correctamente');
+      router.back();
+    } catch (err: any) {
+      if (err.errors) {
+        const zodErrors: any = {};
+        err.errors.forEach((e: any) => {
+          zodErrors[e.path[0]] = e.message;
+        });
+        setErrors(zodErrors);
+      } else {
+        Alert.alert('Error', 'No se pudo crear la tarea');
+      }
+    }
   };
 
   return (
-    <View className="flex-1 bg-black p-4">
-      <Text className="text-white text-2xl font-bold mb-4">
-        Crear nueva tarea
-      </Text>
-
-      <TextInput
-        className="bg-neutral-900 text-white p-3 rounded-xl mb-3"
-        placeholder="Título"
-        placeholderTextColor="#666"
-        value={title}
-        onChangeText={setTitle}
+    <View className="flex-1 bg-white">
+      <TaskForm
+        title={title}
+        description={description}
+        category={category}
+        errors={errors}
+        onTitleChange={setTitle}
+        onDescriptionChange={setDescription}
+        onCategoryChange={setCategory}
+        onSubmit={handleSubmit}
+        submitLabel="Crear Tarea"
       />
-
-      <TextInput
-        className="bg-neutral-900 text-white p-3 rounded-xl mb-3"
-        placeholder="Descripción"
-        placeholderTextColor="#666"
-        value={description}
-        onChangeText={setDescription}
-        multiline
-      />
-
-      <Pressable
-        onPress={handleSubmit}
-        className="bg-blue-600 p-3 rounded-xl mt-2"
-      >
-        <Text className="text-white text-center font-bold text-lg">
-          Guardar
-        </Text>
-      </Pressable>
     </View>
   );
 }

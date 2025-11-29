@@ -1,13 +1,14 @@
-// types/task.ts
 export interface Task {
   id: string;
   title: string;
   description: string;
+  category: 'Trabajo' | 'Personal' | 'Prioridad Alta';
   completed: boolean;
+  createdAt: string;
 }
-  
-  export interface TaskPayload {
-    title: string;
-    description?: string;
-  }
-  
+
+export interface TaskFormData {
+  title: string;
+  description: string;
+  category: 'Trabajo' | 'Personal' | 'Prioridad Alta';
+}

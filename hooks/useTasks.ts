@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import type { Task } from "../types/task";
 
-const API_URL = "http://192.168.0.15:3000/tasks"; // <-- cambia tu IP
+const API_URL = "http://192.168.45.30:3000/tasks"; // <-- cambia tu IP
 
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);

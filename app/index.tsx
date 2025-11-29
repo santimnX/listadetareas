@@ -1,34 +1,45 @@
-// app/index.tsx
-import { View, Text, FlatList } from "react-native";
-import { Link } from "expo-router";
-import { useTasks } from "../hooks/useTasks";
-import TaskCard from "../components/TaskCard";
+import React from 'react';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { router } from 'expo-router';
+import { useTasks } from '../lib/TaskContext';
+import { TaskCard } from '../components/TaskCard';
 
 export default function HomeScreen() {
-  const { tasks } = useTasks();
+  const { tasks, loading, toggleComplete } = useTasks();
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#3B82F6" />
+      </View>
+    );
+  }
 
   return (
-    <View className="flex-1 bg-black px-4 pt-4">
-      <Text className="text-white text-3xl font-bold mb-4">Mis tareas</Text>
-
-      <Link href="/new" className="text-blue-400 underline mb-4 text-lg">
-        + Nueva tarea
-      </Link>
-
+    <View className="flex-1 bg-gray-50">
       <FlatList
         data={tasks}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Link href={`/${item.id}`}>
-            <TaskCard task={item} />
-          </Link>
-        )}
+        keyExtractor={(item) => item.id}
+        contentContainerClassName="p-4"
         ListEmptyComponent={
-          <Text className="text-neutral-500 text-center mt-10">
-            No hay tareas aún.
-          </Text>
+          <Text className="text-center text-gray-500 mt-10">No hay tareas. ¡Crea una nueva!</Text>
         }
+        renderItem={({ item }) => (
+          <TaskCard
+            task={item}
+            onPress={() => router.push(`/${item.id}`)}
+            onToggle={() => toggleComplete(item.id)}
+          />
+        )}
       />
+
+      {/* Botón flotante */}
+      <TouchableOpacity
+        onPress={() => router.push('/new')}
+        className="absolute bottom-6 right-6 bg-blue-500 w-14 h-14 rounded-full items-center justify-center shadow-lg"
+      >
+        <Text className="text-white text-3xl">+</Text>
+      </TouchableOpacity>
     </View>
   );
 }

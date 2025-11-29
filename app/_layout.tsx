@@ -1,18 +1,16 @@
 // app/_layout.tsx
 import "../global.css";
-import { Stack } from "expo-router";
-import { TasksProvider } from "../context/TasksContext";
+import { Stack } from 'expo-router';
+import { TaskProvider } from '../lib/TaskContext';
 
 export default function RootLayout() {
   return (
-    <TasksProvider>
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: "#111" },
-          headerTintColor: "#fff",
-          contentStyle: { backgroundColor: "#000" },
-        }}
-      />
-    </TasksProvider>
+    <TaskProvider>
+      <Stack>
+        <Stack.Screen name="index" options={{ title: 'Mis Tareas' }} />
+        <Stack.Screen name="new" options={{ title: 'Nueva Tarea' }} />
+        <Stack.Screen name="[id]" options={{ title: 'Detalle de Tarea' }} />
+      </Stack>
+    </TaskProvider>
   );
 }
