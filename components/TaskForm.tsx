@@ -1,87 +1,121 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+// components/TaskForm.tsx
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { taskFormSchema, TaskFormData, ValidationErrors, Task } from '../lib/type';
+import Input from './Input';
+import { CheckSquare, Square } from 'lucide-react-native';
 
 interface TaskFormProps {
-  title: string;
-  description: string;
-  category: 'Trabajo' | 'Personal' | 'Prioridad Alta';
-  errors: { title?: string; description?: string; category?: string };
-  onTitleChange: (text: string) => void;
-  onDescriptionChange: (text: string) => void;
-  onCategoryChange: (category: 'Trabajo' | 'Personal' | 'Prioridad Alta') => void;
-  onSubmit: () => void;
-  submitLabel: string;
+  initialData?: Task;
+  onSubmit: (data: TaskFormData & { completed?: boolean }) => void;
+  submitLabel?: string;
 }
 
-export function TaskForm({
-  title,
-  description,
-  category,
-  errors,
-  onTitleChange,
-  onDescriptionChange,
-  onCategoryChange,
-  onSubmit,
-  submitLabel
+const CATEGORIES = ['Trabajo', 'Personal', 'Prioridad Alta'];
+
+export default function TaskForm({ 
+  initialData, 
+  onSubmit, 
+  submitLabel = 'Crear Tarea' 
 }: TaskFormProps) {
-  const categories: Array<'Trabajo' | 'Personal' | 'Prioridad Alta'> = [
-    'Trabajo',
-    'Personal',
-    'Prioridad Alta'
-  ];
+  const [formData, setFormData] = useState<TaskFormData>({
+    title: initialData?.title || '',
+    description: initialData?.description || '',
+    category: initialData?.category || CATEGORIES[0],
+  });
+  
+  const [completed, setCompleted] = useState(initialData?.completed || false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
+
+  const handleSubmit = () => {
+    try {
+      // Validar con Zod
+      taskFormSchema.parse(formData);
+      
+      // Si pasa la validación, limpiar errores y enviar
+      setErrors({});
+      onSubmit({ ...formData, completed });
+      
+    } catch (error: any) {
+      // Capturar errores de Zod
+      const validationErrors: ValidationErrors = {};
+      
+      error.errors?.forEach((err: any) => {
+        const field = err.path[0] as keyof TaskFormData;
+        validationErrors[field] = err.message;
+      });
+      
+      setErrors(validationErrors);
+    }
+  };
 
   return (
-    <View className="p-4">
-      {/* Título */}
-      <View className="mb-4">
-        <Text className="text-sm font-semibold mb-2">Título</Text>
-        <TextInput
-          value={title}
-          onChangeText={onTitleChange}
-          placeholder="Ej: Organizar archivos"
-          className={`border rounded-lg p-3 ${errors.title ? 'border-red-500' : 'border-gray-300'}`}
-        />
-        {errors.title && <Text className="text-red-500 text-xs mt-1">{errors.title}</Text>}
-      </View>
+    <ScrollView className="flex-1 bg-white p-4">
+      <Input
+        label="Título"
+        value={formData.title}
+        onChangeText={(text) => setFormData({ ...formData, title: text })}
+        error={errors.title}
+        placeholder="Ej: Organizar archivos"
+      />
 
-      {/* Descripción */}
-      <View className="mb-4">
-        <Text className="text-sm font-semibold mb-2">Descripción</Text>
-        <TextInput
-          value={description}
-          onChangeText={onDescriptionChange}
-          placeholder="Describe la tarea..."
-          multiline
-          numberOfLines={3}
-          className={`border rounded-lg p-3 ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
-        />
-        {errors.description && <Text className="text-red-500 text-xs mt-1">{errors.description}</Text>}
-      </View>
+      <Input
+        label="Descripción"
+        value={formData.description}
+        onChangeText={(text) => setFormData({ ...formData, description: text })}
+        error={errors.description}
+        placeholder="Describe la tarea..."
+        multiline
+        numberOfLines={4}
+      />
 
-      {/* Categoría */}
-      <View className="mb-6">
-        <Text className="text-sm font-semibold mb-2">Categoría</Text>
-        <View className="flex-row gap-2">
-          {categories.map((cat) => (
-            <TouchableOpacity
-              key={cat}
-              onPress={() => onCategoryChange(cat)}
-              className={`flex-1 p-3 rounded-lg border ${
-                category === cat ? 'bg-blue-500 border-blue-500' : 'bg-white border-gray-300'
-              }`}
-            >
-              <Text className={`text-center text-xs ${category === cat ? 'text-white font-bold' : 'text-gray-700'}`}>
-                {cat}
-              </Text>
-            </TouchableOpacity>
-          ))}
+      {/* Picker de Categoría */}
+      <View className="mb-4">
+        <Text className="text-sm font-semibold text-gray-700 mb-2">
+          Categoría
+        </Text>
+        <View className={`border rounded-lg ${errors.category ? 'border-red-500' : 'border-gray-300'}`}>
+          <Picker
+            selectedValue={formData.category}
+            onValueChange={(value) => setFormData({ ...formData, category: value })}
+          >
+            {CATEGORIES.map((cat) => (
+              <Picker.Item key={cat} label={cat} value={cat} />
+            ))}
+          </Picker>
         </View>
+        {errors.category && (
+          <Text className="text-red-500 text-xs mt-1">{errors.category}</Text>
+        )}
       </View>
 
-      {/* Botón */}
-      <TouchableOpacity onPress={onSubmit} className="bg-blue-500 p-4 rounded-lg">
-        <Text className="text-white text-center font-bold">{submitLabel}</Text>
+      {/* Checkbox de Completado (solo al editar) */}
+      {initialData && (
+        <TouchableOpacity
+          onPress={() => setCompleted(!completed)}
+          className="flex-row items-center mb-6"
+        >
+          {completed ? (
+            <CheckSquare size={24} color="#22c55e" />
+          ) : (
+            <Square size={24} color="#9ca3af" />
+          )}
+          <Text className="ml-2 text-base text-gray-700">
+            Marcar como completada
+          </Text>
+        </TouchableOpacity>
+      )}
+
+      {/* Botón Submit */}
+      <TouchableOpacity
+        onPress={handleSubmit}
+        className="bg-blue-600 rounded-lg py-4 items-center"
+      >
+        <Text className="text-white font-bold text-base">
+          {submitLabel}
+        </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
