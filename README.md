@@ -254,7 +254,11 @@ Causa: Caracteres especiales en el formulario.
 Solución:
 
 Solo usa letras, números y espacios en los campos
-Respeta los límites: título ≤ 100 caracteres, descripción ≤ 500 caracteres
+Resp
+
+https://github.com/user-attachments/assets/0df95286-3f33-435b-b079-d59b5fe80e3b
+
+eta los límites: título ≤ 100 caracteres, descripción ≤ 500 caracteres
 
 Error: Estilos de Tailwind no funcionan
 Causa: NativeWind no está configurado correctamente.
